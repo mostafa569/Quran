@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quran Readers</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>اختر قارئ القرآن</h1>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="ابحث عن قارئ..."
+          onkeyup="filterReaders()"
+        />
+      </div>
+
+      <div class="readers" id="readers-list">
+        <div
+          class="reader"
+          onclick="window.location.href='reader.html?reader=abu_bakr_shatri'"
+        >
+          <img src="reader1.jpg" alt="أبو بكر الشاطري" />
+          <h2>أبو بكر الشاطري</h2>
+        </div>
+        <div
+          class="reader"
+          onclick="window.location.href='reader.html?reader=abdul_baset'"
+        >
+          <img src="reader2.jpg" alt=" عبدالباسط عبدالصمد" />
+          <h2>عبدالباسط عبدالصمد</h2>
+        </div>
+        <div
+          class="reader"
+          onclick="window.location.href='reader.html?reader=abdurrahmaan_as_sudais'"
+        >
+          <img src="reader2.jpg" alt=" عبدالرحمن السديس" />
+          <h2>عبدالرحمن السديس</h2>
+        </div>
+        <!-- Add more readers here -->
+      </div>
+    </div>
+
+    <script>
+      // Function to filter readers based on the search input
+      function filterReaders() {
+        const input = document.getElementById("search-input");
+        const filter = input.value.toLowerCase();
+        const readers = document.querySelectorAll(".reader");
+
+        readers.forEach(function (reader) {
+          const readerName = reader
+            .querySelector("h2")
+            .textContent.toLowerCase();
+          if (readerName.indexOf(filter) > -1) {
+            reader.style.display = "inline-block"; // Show matching reader
+          } else {
+            reader.style.display = "none"; // Hide non-matching reader
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
