@@ -62,6 +62,10 @@ h1 {
 /* Simple styles for the search box and reader list */
 .search-container {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .search-input {
