@@ -15,6 +15,7 @@
         }
         .slide {
             display: none; /* Hide all slides initially */
+            position: relative;
         }
         .active {
             display: block; /* Show only the active slide */
@@ -40,9 +41,9 @@
         .prev { left: 0; }
         .next { right: 0; }
 
-        /* Loading Spinner */
-        .loading {
-            position: fixed;
+        /* Loading Spinner for each image */
+        .image-loading {
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -74,9 +75,6 @@
         <a href="ad3ya.html">أدعية</a>
     </div>
 
-    <!-- Loading Animation -->
-    <div id="loading" class="loading"></div>
-
     <div class="slider">
         <div class="slides" id="quranSlider">
             <!-- Quran images will be inserted here -->
@@ -88,55 +86,64 @@
     <script>
         let currentSlide = 0;
         let totalSlides = 0;
-        const loadingSpinner = document.getElementById('loading');
+        let loadedImages = 0; // Counter to track loaded images
 
         // Fetch Quran images from the JSON file
-        fetch('quran.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const quranData = data[0];
-
-                if (quranData && quranData.pages && Array.isArray(quranData.pages)) {
-                    const sliderContainer = document.getElementById('quranSlider');
-                    totalSlides = quranData.pages.length;
-
-                    // Create slides and append to the container
-                    quranData.pages.forEach((item, index) => {
-                        const slide = document.createElement('div');
-                        slide.classList.add('slide');
-                        if (index === 0) slide.classList.add('active'); // Show the first slide
-
-                        // Create an image element
-                        const img = document.createElement('img');
-                        img.src = item.page_url;
-                        img.alt = `Quran Page ${item.page_number}`;
-
-                        // Hide loading spinner when image is fully loaded
-                        img.onload = () => {
-                            loadingSpinner.classList.add('hidden');
-                        };
-
-                        slide.appendChild(img);
-                        sliderContainer.appendChild(slide);
-                    });
-
-                    // If images load too fast, hide spinner
-                    if (totalSlides > 0) {
-                        loadingSpinner.classList.add('hidden');
+        window.onload = function() {
+            fetch('quran.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                } else {
-                    console.error('Data structure is unexpected:', quranData);
-                }
-            })
-            .catch(error => {
-                console.error('Error loading JSON:', error);
-                loadingSpinner.classList.add('hidden'); // Hide spinner on error
-            });
+                    return response.json();
+                })
+                .then(data => {
+                    const quranData = data[0];
+
+                    if (quranData && quranData.pages && Array.isArray(quranData.pages)) {
+                        const sliderContainer = document.getElementById('quranSlider');
+                        totalSlides = quranData.pages.length;
+
+                        // Create slides and append to the container
+                        quranData.pages.forEach((item, index) => {
+                            const slide = document.createElement('div');
+                            slide.classList.add('slide');
+                            if (index === 0) slide.classList.add('active'); // Show the first slide
+
+                            // Create an image element
+                            const img = document.createElement('img');
+                            img.src = item.page_url;
+                            img.alt = `Quran Page ${item.page_number}`;
+
+                            // Add loading spinner for each image
+                            const loadingSpinner = document.createElement('div');
+                            loadingSpinner.classList.add('image-loading');
+                            slide.appendChild(loadingSpinner);
+
+                            // Hide spinner when image is fully loaded
+                            img.onload = () => {
+                                loadingSpinner.classList.add('hidden');
+                                loadedImages++;
+
+                                // Hide the global spinner once all images are loaded
+                                if (loadedImages === totalSlides) {
+                                    document.getElementById('loading').classList.add('hidden');
+                                }
+                            };
+
+                            slide.appendChild(img);
+                            sliderContainer.appendChild(slide);
+                        });
+
+                    } else {
+                        console.error('Data structure is unexpected:', quranData);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading JSON:', error);
+                    document.getElementById('loading').classList.add('hidden'); // Hide global spinner on error
+                });
+        }
 
         // Function to move the slider
         function moveSlide(direction) {
