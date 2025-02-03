@@ -37,11 +37,32 @@
             user-select: none;
             transform: translate(0, -50%);
         }
-        .prev {
-            left: 0;
+        .prev { left: 0; }
+        .next { right: 0; }
+
+        /* Loading Spinner */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.2);
+            border-top: 5px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: block;
         }
-        .next {
-            right: 0;
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Hide loading when content is ready */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -52,6 +73,9 @@
         <a href="adhkar.html">الاذكار</a>
         <a href="ad3ya.html">أدعية</a>
     </div>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="loading"></div>
 
     <div class="slider">
         <div class="slides" id="quranSlider">
@@ -64,6 +88,7 @@
     <script>
         let currentSlide = 0;
         let totalSlides = 0;
+        const loadingSpinner = document.getElementById('loading');
 
         // Fetch Quran images from the JSON file
         fetch('quran.json')
@@ -85,14 +110,33 @@
                         const slide = document.createElement('div');
                         slide.classList.add('slide');
                         if (index === 0) slide.classList.add('active'); // Show the first slide
-                        slide.innerHTML = `<img src="${item.page_url}" alt="Quran Page ${item.page_number}">`;
+
+                        // Create an image element
+                        const img = document.createElement('img');
+                        img.src = item.page_url;
+                        img.alt = `Quran Page ${item.page_number}`;
+
+                        // Hide loading spinner when image is fully loaded
+                        img.onload = () => {
+                            loadingSpinner.classList.add('hidden');
+                        };
+
+                        slide.appendChild(img);
                         sliderContainer.appendChild(slide);
                     });
+
+                    // If images load too fast, hide spinner
+                    if (totalSlides > 0) {
+                        loadingSpinner.classList.add('hidden');
+                    }
                 } else {
                     console.error('Data structure is unexpected:', quranData);
                 }
             })
-            .catch(error => console.error('Error loading JSON:', error));
+            .catch(error => {
+                console.error('Error loading JSON:', error);
+                loadingSpinner.classList.add('hidden'); // Hide spinner on error
+            });
 
         // Function to move the slider
         function moveSlide(direction) {
