@@ -169,33 +169,48 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Event Listeners
-  surahSelect.addEventListener("change", function () {
-    const selectedSurah = parseInt(surahSelect.value, 10);
+  // Event Listeners for Surah and Recitation changes
+surahSelect.addEventListener("change", function () {
+  const selectedSurah = parseInt(surahSelect.value, 10);
+  playAudioButton.textContent = "تشغيل الصوت";
+  playAudioButton.style.background = "#4CAF50";
+  loadQuranData(reader, selectedSurah, recitationSelect.value);
+});
+
+recitationSelect.addEventListener("change", function () {
+  playAudioButton.textContent = "تشغيل الصوت";
+  playAudioButton.style.background = "#4CAF50";
+  loadQuranData(reader, surahSelect.value, recitationSelect.value);
+});
+
+// Play audio button logic
+playAudioButton.addEventListener("click", function () {
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    playAudioButton.textContent = "إيقاف الصوت";
+    playAudioButton.style.background = "#FF6347"; 
+  } else {
+    audioPlayer.pause();
     playAudioButton.textContent = "تشغيل الصوت";
-    playAudioButton.style.background = "#4CAF50";
-    loadQuranData(reader, selectedSurah, recitationSelect.value);
-  });
+    playAudioButton.style.background = "#4CAF50"; 
+  }
+});
 
-  recitationSelect.addEventListener("change", function () {
-    playAudioButton.textContent = "تشغيل الصوت";
-    playAudioButton.style.background = "#4CAF50";
-    loadQuranData(reader, surahSelect.value, recitationSelect.value);
-  });
+// Listen for play and pause events from the audio player itself
+audioPlayer.addEventListener("play", function () {
+  playAudioButton.textContent = "إيقاف الصوت";
+  playAudioButton.style.background = "#FF6347"; 
+});
 
-  playAudioButton.addEventListener("click", function () {
-    if (audioPlayer.paused) {
-      audioPlayer.play();
-      playAudioButton.textContent = "إيقاف الصوت";
-      playAudioButton.style.background = "#FF6347"; // Change button color
-    } else {
-      audioPlayer.pause();
-      playAudioButton.textContent = "تشغيل الصوت";
-      playAudioButton.style.background = "#4CAF50"; // Reset button color
-    }
-  });
+audioPlayer.addEventListener("pause", function () {
+  playAudioButton.textContent = "تشغيل الصوت";
+  playAudioButton.style.background = "#4CAF50"; 
+});
 
-  textSizeSlider.addEventListener("input", function () {
-    const newSize = textSizeSlider.value + "px";
-    quranTextElement.style.fontSize = newSize;
-  });
+// Text size slider logic
+textSizeSlider.addEventListener("input", function () {
+  const newSize = textSizeSlider.value + "px";
+  quranTextElement.style.fontSize = newSize;
+});
+
 });
