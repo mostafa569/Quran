@@ -22,7 +22,7 @@ function createAdhkarButtons(data) {
   // Create buttons based on the category of each object
   data.forEach((item) => {
     const button = document.createElement("button");
-    button.innerText = `أذكار ${item.category}`;
+    button.innerText = `${item.category}`;
     button.onclick = function () {
       showZikrInModal(item); // Show Zikr details in modal
     };

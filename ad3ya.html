@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>دعوات نبوية</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        direction: rtl; /* Right-to-left direction */
+        text-align: right; /* Align text to the right */
+      }
+      .navbar {
+        background-color: #4caf50;
+        overflow: hidden;
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.2rem;
+        margin: 0 15px;
+        transition: color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        color: #f1f1f1;
+      }
+      h1 {
+        text-align: center;
+      }
+      .controls {
+        text-align: center;
+        margin-bottom: 15px;
+        margin-top: 20px;
+        
+      }
+      label{
+        font-size: 20px;
+      }
+      .dua-section {
+        margin: 20px 0;
+        padding: 15px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .dua {
+        margin: 10px 0;
+        padding: 10px;
+        border-right: 5px solid #007bff; /* Right border for RTL */
+        font-size: 16px; /* Default size */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="index.html">الرئيسية</a>
+      <a href="adhkar.html">الاذكار</a>
+      <a href="The Holy Quran.html">المصحف</a>
+    </div>
+<!-- 
+    <h1>دعوات نبوية</h1> -->
+
+    <!-- Text size control -->
+    <div class="controls">
+      <label for="textSize" >حجم النص :</label>
+      <input type="range" id="textSize" min="12" max="40" value="16" />
+    </div>
+
+    <div id="duasContainer"></div>
+    
+    <script>
+      // Load the dua data from the local JSON file
+      fetch("ad3ya.json")
+        .then((response) => response.json())
+        .then((data) => {
+          const container = document.getElementById("duasContainer");
+          const duasData = data[0]; // Access first element of array
+
+          const sections = [
+            { title: "دعوات نبوية", duas: duasData.prophetic_duas },
+            { title: "دعوات من القرآن", duas: duasData.quran_duas },
+            { title: "دعوات الأنبياء", duas: duasData.prophets_duas },
+            {
+              title: "دعوات إكمال القرآن",
+              duas: duasData.quran_completion_duas,
+            },
+          ];
+
+          sections.forEach((section) => {
+            const sectionDiv = document.createElement("div");
+            sectionDiv.classList.add("dua-section");
+            sectionDiv.innerHTML = `<h2>${section.title}</h2>`;
+
+            section.duas.forEach((dua) => {
+              const duaDiv = document.createElement("div");
+              duaDiv.classList.add("dua");
+              duaDiv.innerText = dua.text;
+              sectionDiv.appendChild(duaDiv);
+            });
+
+            container.appendChild(sectionDiv);
+          });
+
+          // Text size control functionality
+          const textSizeInput = document.getElementById("textSize");
+          textSizeInput.addEventListener("input", () => {
+            document.querySelectorAll(".dua").forEach((dua) => {
+              dua.style.fontSize = textSizeInput.value + "px";
+            });
+          });
+        })
+        .catch((error) => console.error("Error loading JSON:", error));
+    </script>
+  </body>
+</html>
