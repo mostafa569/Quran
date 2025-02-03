@@ -168,8 +168,6 @@ document.addEventListener("DOMContentLoaded", function () {
       );
   }
 
-  // Event Listeners
-  // Event Listeners for Surah and Recitation changes
 surahSelect.addEventListener("change", function () {
   const selectedSurah = parseInt(surahSelect.value, 10);
   playAudioButton.textContent = "تشغيل الصوت";
