@@ -168,34 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
       );
   }
 
-  // Event Listeners
-  surahSelect.addEventListener("change", function () {
-    console.log("surahSelect changed");
-    playAudioButton.textContent = "تشغيل الصوت";
-    playAudioButton.style.setProperty("background", "#4CAF50", "important");
-    loadQuranData(reader, parseInt(surahSelect.value, 10), recitationSelect.value);
-});
+  // Event Listeners 
+  surahSelect.addEventListener("change", function () { const selectedSurah = parseInt(surahSelect.value, 10); playAudioButton.textContent = "تشغيل الصوت"; playAudioButton.style.background = "#4CAF50"; loadQuranData(reader, selectedSurah, recitationSelect.value); });
 
-recitationSelect.addEventListener("change", function () {
-    console.log("recitationSelect changed");
-    playAudioButton.textContent = "تشغيل الصوت";
-    playAudioButton.style.setProperty("background", "#4CAF50", "important");
-    loadQuranData(reader, surahSelect.value, recitationSelect.value);
-});
+recitationSelect.addEventListener("change", function () { playAudioButton.textContent = "تشغيل الصوت"; playAudioButton.style.background = "#4CAF50"; loadQuranData(reader, surahSelect.value, recitationSelect.value); });
 
-playAudioButton.addEventListener("click", function () {
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-        playAudioButton.textContent = "إيقاف الصوت";
-        playAudioButton.style.setProperty("background", "#FF6347", "important");
-    } else {
-        audioPlayer.pause();
-        playAudioButton.textContent = "تشغيل الصوت";
-        playAudioButton.style.setProperty("background", "#4CAF50", "important");
-    }
-});
+playAudioButton.addEventListener("click", function () { if (audioPlayer.paused) { audioPlayer.play(); playAudioButton.textContent = "إيقاف الصوت"; playAudioButton.style.background = "#FF6347"; // Change button color } else { audioPlayer.pause(); playAudioButton.textContent = "تشغيل الصوت"; playAudioButton.style.background = "#4CAF50"; // Reset button color } });
 
-textSizeSlider.addEventListener("input", function () {
-    const newSize = textSizeSlider.value + "px";
-    quranTextElement.style.fontSize = newSize;
-});
+textSizeSlider.addEventListener("input", function () { const newSize = textSizeSlider.value + "px"; quranTextElement.style.fontSize = newSize; });
