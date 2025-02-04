@@ -140,46 +140,63 @@ document.addEventListener("DOMContentLoaded", function () {
     if (serverIndex > 16) {
       errorMessage.textContent = "التلاوة غير متوفرة لهذا القارئ";
       audioPlayer.src = "";
+      hideLoadingSpinner(); // Hide spinner if no audio is found
       return;
     }
-
+  
+    // Show loading spinner
+    showLoadingSpinner();
+  
     // Construct audio URL based on whether recitationType exists
     let audioUrl;
     if (recitationType) {
-      // If recitationType is provided, include it in the URL
       audioUrl = `https://server${serverIndex}.mp3quran.net/${reader}/${recitationType}/${surahId}.mp3`;
     } else {
-      // If no recitationType is provided, use the base URL
       audioUrl = `https://server${serverIndex}.mp3quran.net/${reader}/${surahId}.mp3`;
     }
-
+  
     // Check if audio file exists
     fetch(audioUrl, { method: "HEAD" })
       .then((response) => {
         if (response.ok) {
           audioPlayer.src = audioUrl;
           errorMessage.textContent = "";
+          hideLoadingSpinner(); // Hide spinner once audio is loaded
         } else {
           tryAudioSources(reader, surahId, recitationType, serverIndex + 1);
         }
       })
-      .catch(() =>
-        tryAudioSources(reader, surahId, recitationType, serverIndex + 1)
-      );
+      .catch(() => {
+        tryAudioSources(reader, surahId, recitationType, serverIndex + 1);
+      });
+  }
+  
+  // Function to show the loading spinner
+  function showLoadingSpinner() {
+    const loadingSpinner = document.getElementById("loading-spinner");
+    loadingSpinner.style.display = "inline-block";
+  }
+  
+  // Function to hide the loading spinner
+  function hideLoadingSpinner() {
+    const loadingSpinner = document.getElementById("loading-spinner");
+    loadingSpinner.style.display = "none";
   }
 
-surahSelect.addEventListener("change", function () {
-  const selectedSurah = parseInt(surahSelect.value, 10);
-  playAudioButton.textContent = "تشغيل الصوت";
-  playAudioButton.style.background = "#4CAF50";
-  loadQuranData(reader, selectedSurah, recitationSelect.value);
-});
-
-recitationSelect.addEventListener("change", function () {
-  playAudioButton.textContent = "تشغيل الصوت";
-  playAudioButton.style.background = "#4CAF50";
-  loadQuranData(reader, surahSelect.value, recitationSelect.value);
-});
+  surahSelect.addEventListener("change", function () {
+    const selectedSurah = parseInt(surahSelect.value, 10);
+    playAudioButton.textContent = "تشغيل الصوت";
+    playAudioButton.style.background = "#4CAF50";
+    showLoadingSpinner(); // Show spinner when Surah is changed
+    loadQuranData(reader, selectedSurah, recitationSelect.value);
+  });
+  
+  recitationSelect.addEventListener("change", function () {
+    playAudioButton.textContent = "تشغيل الصوت";
+    playAudioButton.style.background = "#4CAF50";
+    showLoadingSpinner(); // Show spinner when recitation type is changed
+    loadQuranData(reader, surahSelect.value, recitationSelect.value);
+  });
 
 // Play audio button logic
 playAudioButton.addEventListener("click", function () {
@@ -194,10 +211,14 @@ playAudioButton.addEventListener("click", function () {
   }
 });
 
-// Listen for play and pause events from the audio player itself
 audioPlayer.addEventListener("play", function () {
   playAudioButton.textContent = "إيقاف الصوت";
-  playAudioButton.style.background = "#FF6347"; 
+  playAudioButton.style.background = "#FF6347";
+  hideLoadingSpinner(); // Hide spinner when audio starts playing
+});
+
+audioPlayer.addEventListener("error", function () {
+  hideLoadingSpinner(); // Hide spinner if there's an error
 });
 
 audioPlayer.addEventListener("pause", function () {

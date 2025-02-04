@@ -19,12 +19,31 @@
         font-weight: bold; /* Bold text */
         margin: 0 5px; /* Spacing around the circle */
       }
+      .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #4caf50; /* Green color */
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        display: none; /* Hidden by default */
+        margin-left: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
 
   <body>
-     <!-- Navbar -->
-     <div class="navbar">
+    <!-- Navbar -->
+    <div class="navbar">
       <a href="index.html">الرئيسية</a>
       <a href="adhkar.html">الاذكار</a>
       <a href="The Holy Quran.html">المصحف</a>
@@ -174,8 +193,11 @@
         <div class="quran-audio">
           <button id="play-audio">تشغيل الصوت</button>
           <audio id="audio-player" controls></audio>
+          <div id="loading-spinner" class="loading-spinner"></div>
+          <!-- Loading spinner -->
         </div>
         <div class="quran-text">
+          
           <h2 id="surah-name">اسم السورة</h2>
           <p id="quran-text">نص السورة سيظهر هنا...</p>
         </div>
