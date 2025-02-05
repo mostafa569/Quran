@@ -42,6 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ajm:{name:"أحمد بن علي العجمي",types:[]},
     ahmed_ibn_3ali_al_3ajamy: { name: "أحمد العجمي", types: ["Murattal"] },
     ayyub: { name: "محمد أيوب", types: [] },
+    yasser:{name:"ياسر الدوسري",types:[]},
+    hazza:{name:"هزاع البلوشي",types:[]},
+    qtm:{name:"ناصر القطامي",types:[]},
   };
 
   const recitationTypesMap = {
